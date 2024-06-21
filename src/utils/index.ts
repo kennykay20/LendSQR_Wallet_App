@@ -1,8 +1,9 @@
 const EMAIL_TOKEN_EXPIRATION_MINUTE = 10;
 const EMAIL_TOKEN_EXPIRATION_HOUR = 24;
-export enum tokenType {
-  "EMAIL" = "EMAIL",
-  "API_TOKEN" = "API_TOKEN"
+export enum TransactionsType {
+  "fund" = "fund",
+  "transfer" = "transfer",
+  "withdraw" = "withdraw"
 }
 
 export const expirationMinute = () => {
@@ -26,7 +27,7 @@ export const generateRandom11DigitNumber = (): number => {
   const max = 1e11 - 1; // Maximum 11-digit number (99999999999)
   const randomNum = Math.floor(Math.random() * (max - min + 1)) + min;
   return randomNum;
-}
+};
 
 export interface userDetails {
   email: string;
