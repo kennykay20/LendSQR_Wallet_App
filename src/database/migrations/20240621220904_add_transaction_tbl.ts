@@ -3,10 +3,10 @@ import type { Knex } from "knex";
 export async function up(knex: Knex): Promise<void> {
   return knex.schema.createTable('transactions', function(table) {
     table.increments('id');
-    table.integer('account_id').unsigned().notNullable();
+    table.bigint('account_id').notNullable();
     table.enu('type', ["fund", "transfer", "withdraw"]).notNullable();
     table.decimal('amount');
-    table.integer('recipient_account_id').nullable();
+    table.bigint('recipient_account_id').nullable();
     table.boolean('is_deleted').defaultTo(false);
     table.timestamp('deleted_at').nullable();
     table.timestamps(true, true); // Adds created_at and updated_at columns
