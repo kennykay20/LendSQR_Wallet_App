@@ -12,7 +12,7 @@ export class UserService {
   createUser = async (req: Request, res: Response) => {
     try {
       let hashPassword: any = null;
-      const { email, username, full_name, password } = req.body;
+      const { email, username, full_name, password, address } = req.body;
       if (!email ) {
         return res
           .status(400)
@@ -43,18 +43,24 @@ export class UserService {
         );
         hashPassword = `${salt}.${passwordHash}`;
       }
-      const savedUser = await knex(this.tableName).insert({
+      const [insertedId] = await knex(this.tableName).insert({
         email,
         username,
         full_name,
-        password: hashPassword,
-      }).returning("*");
-      console.log('result ', savedUser);
-      return res.json(savedUser[0]);
+        password_hash: hashPassword,
+        address
+      });
+
+      const insertedUser = await knex(this.tableName).where('id', insertedId).first();
+      console.log('result ', insertedUser);
+      delete insertedUser.password_hash;
+      return res.status(201).json(insertedUser);
 
     } catch (error) {
       console.log(error);
       return res.sendStatus(400)
+    } finally {
+      await knex.destroy();
     }
   };
 
@@ -63,7 +69,9 @@ export class UserService {
       const users = await knex(this.tableName);
       res.json(users);
     } catch (error) {
-      res.status(404).send("error fetching data");
+      res.status(404).send(`error fetching user ${error}`);
+    } finally {
+      await knex.destroy();
     }
   };
 
@@ -108,7 +116,7 @@ export class UserService {
   getUserByEmail = async(email: string): Promise<any> => {
     try {
       const result = await knex(this.tableName).where(
-        {email, isDelete: false });
+        {email, is_delete: false });
       console.log('result ', result);
       return result[0];
     } catch (error) {

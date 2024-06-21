@@ -9,6 +9,6 @@ export default (router: express.Router) => {
   router.post("/api/v1/accounts/fund", acctCtl.FundAccount);
   router.post("/api/v1/accounts/transfer", acctCtl.TransferFunds);
   router.post("/api/v1/accounts/withdraw", acctCtl.WithdrawFunds);
-  router.get("/api/v1/accounts/balance", acctCtl.AccountBalance);
+  router.get("/api/v1/accounts/checkbalance", acctCtl.AccountBalance);
   return router;
 };
