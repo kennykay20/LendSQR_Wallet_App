@@ -1,10 +1,8 @@
 import { injectable } from "tsyringe";
-
-import jwt from "jsonwebtoken";
-import { config } from "config";
 import { Request, Response } from "express";
 import { UserService } from "../users/user.service";
 import { Authentication } from "../utils/auth";
+import { generateAuthToken } from "../utils";
 
 @injectable()
 export class AuthService {
@@ -23,8 +21,8 @@ export class AuthService {
         return res.status(400).send('User not found');
       }
       if (password) {
-        const salt = isUser.password.split('.')[0];
-        const hashPassword = isUser.password.split('.')[1];
+        const salt = isUser.password_hash.split('.')[0];
+        const hashPassword = isUser.password_hash.split('.')[1];
         flag = Authentication.comparePassword(password, hashPassword, salt);
       }
       if (!flag) {
@@ -32,41 +30,16 @@ export class AuthService {
       }
 
       if (!isUser.is_deleted && isUser.is_active) {
-        token = await this.generateAuthToken(email, isUser.id);
+        token = await generateAuthToken(email, isUser.id);
       } else {
         return res.status(400).send(
           'Please activate your account'
         );
       }
-      return token;
+      console.log('token ', token);
+      return res.status(200).json(token);
     } catch (error) {
       console.log(error);
     }
-  };
-
-  generateToken = (): string => {
-    return Math.floor(10000000 + Math.random() * 90000000).toString();
-  };
-
-  generateAuthToken = async (
-    email: string,
-    userId: string,
-  ): Promise<{ access_token: string }> => {
-    const payloadToken = { email, userId };
-    const secretToken = config.secret;
-    return {
-      access_token: jwt.sign(payloadToken, secretToken, {
-        algorithm: "HS256",
-        noTimestamp: true
-      }),
-    };
-  };
-
-  generateOtp() {
-    return Math.floor(Math.random() * (999999 - 111111) + 111111).toString();
-  }
-
-  verifyToken = async (token: string, secret: string) => {
-    return jwt.verify(token, secret);
   };
 }

@@ -18,12 +18,16 @@ export class UserController {
   };
 
   GetUser = async (req: express.Request, res: express.Response) => {
-    const { user_id } = req.params;
-    return await this.userSvc.getUserById(user_id, res);
+    const { id } = req.params;
+    return await this.userSvc.getUserById(id, res);
   };
 
   UpdateUser = async (req: express.Request, res: express.Response) => {
     return await this.userSvc.updateUser(req, res);
+  };
+
+  UpdateUserActive = async (req: express.Request, res: express.Response) => {
+    return await this.userSvc.updateUserByActive(req, res);
   };
 
   DeleteUser = async (req: express.Request, res: express.Response) => {
