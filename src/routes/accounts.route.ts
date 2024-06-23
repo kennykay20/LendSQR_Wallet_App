@@ -1,6 +1,6 @@
 import express from "express";
 import { container } from "tsyringe";
-import { AccountController } from "../accounts/account.controller";
+import { AccountController } from "../Accounts/account.controller";
 import { AuthenticationMiddleware } from "../middlewares/auth.middleware";
 
 const acctCtl = container.resolve(AccountController);

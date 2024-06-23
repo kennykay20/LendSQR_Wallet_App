@@ -5,6 +5,7 @@ import { isValidEmail, isValidPassword } from "../utils/helpers";
 import { Authentication } from "../utils/auth";
 import { userDetails } from "./dto/user.interface";
 
+
 @injectable()
 export class UserService {
   tableName = "users";
@@ -32,7 +33,6 @@ export class UserService {
 
       // check if this email already exist
       const emailExist = await this.getUserByEmail(email);
-      console.log('emailExist ', emailExist);
       if (emailExist) {
         res.status(400).send('Email already exist');
       }
@@ -54,7 +54,6 @@ export class UserService {
       });
 
       const insertedUser = await knex(this.tableName).where('id', insertedId).first();
-      console.log('result ', insertedUser);
       delete insertedUser.password_hash;
       return res.status(201).json(insertedUser);
 
@@ -67,7 +66,7 @@ export class UserService {
   getAllUsers = async (req: Request, res: Response) => {
     try {
       const users = await knex(this.tableName);
-      res.json(users);
+      res.status(200).json(users);
     } catch (error) {
       res.status(404).send(`error fetching user ${error}`);
     }
@@ -75,7 +74,6 @@ export class UserService {
 
   getUserById = async (id: string, res: Response) => {
     try {
-      console.log('id ', id);
       const user = await this.getUser(id);
       if(user) {
         return res.status(200).json(user);
@@ -101,7 +99,7 @@ export class UserService {
       const { id } = req.params;
       const { fullName, username } = req.body;
       const result = await knex(this.tableName).where({ id }).update({ fullName, username })
-      res.json(result);
+      res.status(200).json(result);
     } catch (error) {
       res
         .status(400)
@@ -109,41 +107,21 @@ export class UserService {
     }
   };
 
-  updateUserByActive = async (req: Request, res: Response) => {
-    try {
-      const { id } = req.params;
-      const { is_active } = req.body;
-      console.log('id ', id);
-      console.log('is_active ', is_active);
-      const isUser = await this.getUser(id);
-      console.log('isUser ', isUser);
-      if (isUser) {
-        console.log('inside to update status');
-        await knex(this.tableName).where({ id }).update({ is_active });
-        // const insertedUser = await knex(this.tableName).where('id', insertedId).first();
-        return res.status(200).json(isUser.is_active);
-      } else {
-        return res.status(400).send(`user with id ${id} not found`);
-      }
-    } catch (error) {
-      res
-        .status(400)
-        .json({ message: `failed to update the user `, error });
-    }
-  };
-
   deleteUser = async (req: Request, res: Response) => {
     try {
       const { id } = req.params;
-      const result = await knex(this.tableName).where({ id }).update({ is_deleted: true, deleted_at: Date.now().toString()})
-            .returning("*");
+      const result = await knex(this.tableName).where({ id }).update({ is_deleted: true, deleted_at: Date.now().toString()});
       if(result) {
-        res.status(200).send(`user for id ${id} successfully deleted`);
+        res.status(200).send(`user with id ${id} successfully deleted`);
+      } else {
+        res
+        .status(400)
+        .json({ message: `failed to delete user with id ${id} `});
       }
     } catch (error) {
       res
         .status(400)
-        .json({ message: `failed to delete the user `, error: error });
+        .json({ message: `error to delete the user `, error: error });
     }
   };
 
@@ -151,7 +129,6 @@ export class UserService {
     try {
       const result = await knex(this.tableName).where(
         {email, is_deleted: false });
-      console.log('result ', result);
       return result[0];
     } catch (error) {
       console.log(error);

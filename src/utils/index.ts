@@ -2,8 +2,6 @@ import { Response } from 'express';
 import { config } from '../config';
 import jwt, { JwtPayload } from "jsonwebtoken";
 
-const EMAIL_TOKEN_EXPIRATION_MINUTE = 10;
-const EMAIL_TOKEN_EXPIRATION_HOUR = 24;
 export enum TransactionsType {
   "fund" = "fund",
   "transfer" = "transfer",
@@ -14,18 +12,6 @@ interface DecodedToken extends JwtPayload {
   userId: string;
   // Add any other payload properties you expect
 }
-
-export const expirationMinute = () => {
-  return new Date(
-    new Date().getTime() + EMAIL_TOKEN_EXPIRATION_MINUTE * 60 * 1000
-  );
-};
-
-export const expirationHour = () => {
-  return new Date(
-    new Date().getTime() + EMAIL_TOKEN_EXPIRATION_HOUR * 60 * 60 * 1000
-  );
-};
 
 export const generateToken = (): string => {
   return Math.floor(10000000 + Math.random() * 90000000).toString();

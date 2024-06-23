@@ -1,5 +1,5 @@
 import { autoInjectable } from "tsyringe";
-import { UserService } from "../users/user.service";
+import { UserService } from "../Users/user.service";
 import { AuthService } from "../Authorization/auth.service";
 import express, { NextFunction } from "express";
 import { config } from "../config";
@@ -45,10 +45,6 @@ export class AuthenticationMiddleware {
       }
       let user = await this.userSvc.getUser(userId);
       user = typeof user === 'string' ? JSON.parse(user) : user;
-
-      if (user && user.is_active === false) {
-        return res.status(400).send('Please activate your account');
-      }
 
       req.headers['user'] = JSON.stringify({
         id: user?.id,

@@ -1,10 +1,10 @@
 import { injectable } from "tsyringe";
 import { Request, Response } from "express";
-import { UserService } from "../users/user.service";
+import { UserService } from "../Users/user.service";
 import knex from "../database/db";
 import { generateRandom11DigitNumber } from "../utils";
-import { accountDetails } from "./dto/account.interface";
 import { TransactionService } from "../Transactions/transaction.service";
+import { accountDetails } from "./dto/account.interface";
 
 @injectable()
 export class AccountService {
@@ -19,17 +19,18 @@ export class AccountService {
   createAccount = async (req: Request, res: Response) => {
     try {
       const { user_id } = req.body;
-      console.log('user_id', user_id);
       const isUser = await this.userSvc.getUser(user_id);
       if (!isUser) {
         return res.status(400).send("User not found");
       }
+      // generate a random 11 digit number for an account number for a user
       const generatedId = generateRandom11DigitNumber();
-      console.log('genratedId ', generatedId);
+      // check if the generatedId as an account number already exist
       const accountId = await this.getAccount(generatedId);
-      console.log('accountId ', accountId);
+      // if not then use for the user
+      // the generatedId(account_number) is used as the primary id for the account table
+      // by default balance is set as 0
       if (!accountId) {
-        console.log('inside insert account');
         await knex(this.tableName)
           .insert({
             id: generatedId,
@@ -41,6 +42,7 @@ export class AccountService {
       }
     } catch (error) {
       console.log(error);
+      res.status(404).send(`error creating an account: ${error}`);
     }
   };
 
@@ -48,7 +50,7 @@ export class AccountService {
     try {
       const request  = req;
       const response = res;
-      const { account_id, amount } = req.body;
+      const { account_id, amount, remark } = req.body;
       const account = await this.getAccount(account_id);
       if (!account) {
         return res.status(400).send("Account not found, please create an account");
@@ -57,13 +59,14 @@ export class AccountService {
       let fundAmount = (Number(account.balance) + Number(amount));
       await knex(this.tableName)
         .where({ id: account_id })
-        .update({ id: account_id, balance: fundAmount });
+        .update({ id: account_id, balance: fundAmount, remark });
 
       const updatedAccount: accountDetails | undefined = await knex(this.tableName)
         .where({ id: account_id })
         .first();
 
       if (updatedAccount) {
+        // update the transaction table with the enum type as fund
         const transaction = await this.transSvc.fundTransaction(request, response);
         return res.status(200).json(updatedAccount);
       } else {
@@ -71,6 +74,7 @@ export class AccountService {
       }
     } catch (error) {
       console.log(error);
+      res.status(404).send(`error funding an account: ${error}`);
     }
   };
 
@@ -78,10 +82,10 @@ export class AccountService {
     try {
       const request = req;
       const response = res;
-      const { account_id, recipient_account_id, amount} = req.body;
-      const account = await this.getAccount(account_id);
+      const { account_id, recipient_account_id, amount, remark } = req.body;
+      const userAccount = await this.getAccount(account_id);
 
-      if (!account) {
+      if (!userAccount) {
         return res.status(400).send("account number not found");
       }
       // check recipient account number
@@ -89,30 +93,33 @@ export class AccountService {
       if (!recipientAccount) {
         return res.status(400).send("recipient account number not found");
       }
-      // check accountBalance with the amount you want to transfer to another account
-      if (account && account.balance < amount) {
+      // check the user account balance with the amount you want to transfer to recipient account
+      if (userAccount && userAccount.balance < amount) {
         return res.status(400).send(`you don't have up to ${amount} in your account to transfer`);
       }
 
-      const withdrawAccount: accountDetails | undefined = await this.withdrawAmount(Number(account.balance), Number(amount), account_id);
+      // after successful balance check, deduct the amount we want to transfer
+      const withdrawAccount: accountDetails | undefined = await this.withdrawAmount(Number(userAccount.balance), Number(amount), account_id);
       // update the recipient account
       let updatedBalance = (Number(recipientAccount?.balance) + Number(amount));
       await knex(this.tableName)
         .where({ id: recipient_account_id })
-        .update({ balance: updatedBalance });
+        .update({ balance: updatedBalance, remark });
 
       const updatedAccount: accountDetails | undefined = await knex(this.tableName)
         .where({ id: account_id })
         .first();
 
       if (updatedAccount) {
+        // update the transaction table with the enum type as transfer
         const transaction = await this.transSvc.transferTransaction(request, response);
         return res.status(200).json(updatedAccount);
       } else {
-        return res.status(400).send("no account to fund ");
+        return res.status(400).send("no recipient account to fund ");
       }
     } catch (error) {
       console.log(error);
+      res.status(404).send(`error to transfer fund: ${error}`);
     }
   };
 
@@ -133,6 +140,7 @@ export class AccountService {
       const updatedAccount: accountDetails | undefined = await this.withdrawAmount(Number(account.balance), Number(amount), account_id);
 
       if (updatedAccount) {
+        // update the transaction table with the enum type as withdraw
         const transaction = await this.transSvc.withdrawTransaction(request, response);
         return res.status(200).json(updatedAccount);
       } else {
@@ -140,6 +148,7 @@ export class AccountService {
       }
     } catch (error) {
       console.log(error);
+      res.status(404).send(`error withdrawing an amount: ${error}`);
     }
   };
 
@@ -167,6 +176,7 @@ export class AccountService {
       return res.status(200).json(account);
     } catch (error) {
       console.log(error);
+      res.status(404).send(`error account balance: ${error}`);
     }
   };
 

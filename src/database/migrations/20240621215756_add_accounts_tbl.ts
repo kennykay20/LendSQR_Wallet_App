@@ -5,6 +5,7 @@ export async function up(knex: Knex): Promise<void> {
     table.bigint('id').primary();
     table.integer('user_id').unsigned().notNullable();
     table.decimal('balance').defaultTo(0);
+    table.string('remark').nullable();
     table.boolean('is_deleted').defaultTo(false);
     table.timestamp('deleted_at').nullable();
     table.timestamps(true, true); // Adds created_at and updated_at columns

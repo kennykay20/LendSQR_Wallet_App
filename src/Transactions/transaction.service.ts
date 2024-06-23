@@ -54,7 +54,7 @@ export class TransactionService {
   withdrawTransaction = async (req: Request, res: Response) => {
     try {
       // update the transaction type as withdraw
-      const { account_id, amount, recipient_account_id } = req.body;
+      const { account_id, amount } = req.body;
 
       // id of the table is increment
       const [insertedId] = await knex(this.tableName).insert({

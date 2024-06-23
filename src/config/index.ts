@@ -23,7 +23,7 @@ const schemaValidate = joi
     DB_USER: joi.string(),
     DB_PASSWORD: joi.string(),
     DB_DATABASE: joi.string(),
-    SECRET: joi.string()
+    JWT_SECRET: joi.string()
   })
   .unknown()
   .required();
@@ -51,5 +51,5 @@ export const config = {
     PASSWORD: envVars.DB_PASSWORD,
     DATABASE: envVars.DB_DATABASE
   },
-  secret: envVars.SECRET
+  secret: envVars.JWT_SECRET
 };

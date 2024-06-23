@@ -1,7 +1,6 @@
 import type { Knex } from "knex";
 import * as dotenv from "dotenv";
-import { config } from "./src/config";
-import path from "path";
+import { config } from "../config";
 
 process.env.ENV_PATH
   ? dotenv.config({ path: process.env.ENV_PATH })
@@ -22,16 +21,24 @@ const knexConfig: { [key: string]: Knex.Config } = {
     // connection: process.env.DB_URL,
     searchPath: ['knex', 'public'],
     migrations: {
-      directory: './src/database/migrations',
+      directory: './migrations',
     },
     seeds: {
-      directory: './database/seeds'
+      directory: './seeds'
     }
   },
 
-  testing: {
-    client: 'pg',
-    connection: process.env.DB_URL,
+  staging: {
+    client: config.DB.NAME,
+    connection: {
+      host: config.DB.HOST,
+      port: config.DB.PORT,
+      user: config.DB.USER,
+      password: config.DB.PASSWORD,
+      database: config.DB.DATABASE,
+      charset: 'utf8'
+    },
+    // connection: process.env.DB_URL,
     searchPath: ['knex', 'public'],
     migrations: {
       directory: './src/database/migrations',
@@ -42,14 +49,22 @@ const knexConfig: { [key: string]: Knex.Config } = {
   },
 
   production: {
-    client: 'pg',
-    connection: process.env.DB_URL,
+    client: config.DB.NAME,
+    connection: {
+      host: config.DB.HOST,
+      port: config.DB.PORT,
+      user: config.DB.USER,
+      password: config.DB.PASSWORD,
+      database: config.DB.DATABASE,
+      charset: 'utf8'
+    },
+    // connection: process.env.DB_URL,
     searchPath: ['knex', 'public'],
     migrations: {
-      directory: './src/database/migrations',
+      directory: './migrations',
     },
     seeds: {
-      directory: './src/database/seeds'
+      directory: './seeds'
     }
   }
 

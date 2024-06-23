@@ -26,10 +26,6 @@ export class UserController {
     return await this.userSvc.updateUser(req, res);
   };
 
-  UpdateUserActive = async (req: express.Request, res: express.Response) => {
-    return await this.userSvc.updateUserByActive(req, res);
-  };
-
   DeleteUser = async (req: express.Request, res: express.Response) => {
     return await this.userSvc.deleteUser(req, res);
   };

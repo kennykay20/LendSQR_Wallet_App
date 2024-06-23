@@ -1,6 +1,6 @@
 import express from "express";
 import { container } from "tsyringe";
-import { UserController } from "../users/user.controller";
+import { UserController } from "../Users/user.controller";
 import { AuthController } from "../Authorization/auth.controller";
 import { AuthenticationMiddleware } from "../middlewares/auth.middleware";
 
@@ -14,7 +14,6 @@ export default (router: express.Router) => {
   router.get("/api/v1/users", authCheck.isOwnerUser, userCtl.GetAllUsers);
   router.get("/api/v1/users/:id", authCheck.isOwnerUser, userCtl.GetUser);
   router.put("/api/v1/users/:id", authCheck.isOwnerUser, userCtl.UpdateUser);
-  router.put("/api/v1/users/status/:id", userCtl.UpdateUserActive);
   router.delete("/api/v1/users/:id", authCheck.isOwnerUser, userCtl.DeleteUser);
   return router;
 };

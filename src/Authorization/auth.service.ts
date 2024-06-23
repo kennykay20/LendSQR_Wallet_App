@@ -1,6 +1,6 @@
 import { injectable } from "tsyringe";
 import { Request, Response } from "express";
-import { UserService } from "../users/user.service";
+import { UserService } from "../Users/user.service";
 import { Authentication } from "../utils/auth";
 import { generateAuthToken } from "../utils";
 

@@ -9,7 +9,6 @@ export async function up(knex: Knex): Promise<void> {
     table.string('email').unique().index().notNullable();
     table.string('password_hash').notNullable();
     table.string('address').defaultTo('');
-    table.boolean('is_active').defaultTo(false);
     table.boolean('is_deleted').defaultTo(false);
     table.timestamp('deleted_at').nullable();
     table.timestamps(true, true); // Adds created_at and updated_at columns
