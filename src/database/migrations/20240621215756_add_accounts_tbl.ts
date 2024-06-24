@@ -4,6 +4,7 @@ export async function up(knex: Knex): Promise<void> {
   return knex.schema.createTable('accounts', function(table) {
     table.bigint('id').primary();
     table.integer('user_id').unsigned().notNullable();
+    table.decimal('amount').defaultTo(0);
     table.decimal('balance').defaultTo(0);
     table.string('remark').nullable();
     table.boolean('is_deleted').defaultTo(false);

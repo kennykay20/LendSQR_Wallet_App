@@ -35,6 +35,7 @@ export class AccountService {
           .insert({
             id: generatedId,
             user_id,
+            amount: 0,
             balance: 0
           });
         const insertedAccount = await knex(this.tableName).where('id', generatedId).first();
@@ -56,10 +57,10 @@ export class AccountService {
         return res.status(400).send("Account not found, please create an account");
       }
 
-      let fundAmount = (Number(account.balance) + Number(amount));
+      let fundBalance = (Number(account.balance) + Number(amount));
       await knex(this.tableName)
         .where({ id: account_id })
-        .update({ id: account_id, balance: fundAmount, remark });
+        .update({ id: account_id, amount, balance: fundBalance, remark });
 
       const updatedAccount: accountDetails | undefined = await knex(this.tableName)
         .where({ id: account_id })
@@ -104,7 +105,7 @@ export class AccountService {
       let updatedBalance = (Number(recipientAccount?.balance) + Number(amount));
       await knex(this.tableName)
         .where({ id: recipient_account_id })
-        .update({ balance: updatedBalance, remark });
+        .update({ balance: updatedBalance, amount, remark });
 
       const updatedAccount: accountDetails | undefined = await knex(this.tableName)
         .where({ id: account_id })
@@ -157,7 +158,7 @@ export class AccountService {
     let withdrawAmount = (Number(balance) - Number(amount));
     await knex(this.tableName)
       .where({ id: account_id })
-      .update({ id: account_id, balance: withdrawAmount });
+      .update({ id: account_id, balance: withdrawAmount, amount });
 
     const updatedAccount = await knex(this.tableName)
       .where({ id: account_id })
