@@ -109,7 +109,6 @@ This is a wallet application built with TypeScript, Node.js, Knex.js as the ORM,
 │ │ │ ├── 20240621215756_add_accounts_tbl.ts
 │ │ │ ├── 20240621220904_add_transactions_tbl.ts
 │ │ ├── db.ts
-│ │ ├── knexfile.ts
 │ ├── middlewares
 │ │ ├── auth,middleware.ts
 │ ├── routes
@@ -133,9 +132,12 @@ This is a wallet application built with TypeScript, Node.js, Knex.js as the ORM,
 │ │ ├── index.ts
 │ ├── main.ts
 ├── .env
+├── .env.example
 ├── .gitignore
+├── knexfile
 ├── package-lock.json
 ├── package.json
+├── Procfile
 ├── tsconfig.json
 └── README.md
 
