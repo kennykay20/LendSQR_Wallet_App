@@ -5,6 +5,7 @@ import knex from "../database/db";
 import { generateRandom11DigitNumber } from "../utils";
 import { TransactionService } from "../Transactions/transaction.service";
 import { accountDetails } from "./dto/account.interface";
+import { isPositiveValue } from "../utils/helpers";
 
 @injectable()
 export class AccountService {
@@ -56,7 +57,10 @@ export class AccountService {
       if (!account) {
         return res.status(400).send("Account not found, please create an account");
       }
-
+      let validateAmount = isPositiveValue(amount);
+      if (validateAmount === -1) {
+        return res.status(400).send("Please enter a positive amount");
+      }
       let fundBalance = (Number(account.balance) + Number(amount));
       await knex(this.tableName)
         .where({ id: account_id })
@@ -98,7 +102,10 @@ export class AccountService {
       if (userAccount && userAccount.balance < amount) {
         return res.status(400).send(`you don't have up to ${amount} in your account to transfer`);
       }
-
+      let validateAmount = isPositiveValue(amount);
+      if (validateAmount === -1) {
+        return res.status(400).send("Please enter a positive amount");
+      }
       // after successful balance check, deduct the amount we want to transfer
       const withdrawAccount: accountDetails | undefined = await this.withdrawAmount(Number(userAccount.balance), Number(amount), account_id);
       // update the recipient account
@@ -137,7 +144,10 @@ export class AccountService {
       if (account && account.balance < amount) {
         return res.status(400).send(`you don't have up to ${amount} in your account`);
       }
-
+      let validateAmount = isPositiveValue(amount);
+      if (validateAmount === -1) {
+        return res.status(400).send("Please enter a positive amount");
+      }
       const updatedAccount: accountDetails | undefined = await this.withdrawAmount(Number(account.balance), Number(amount), account_id);
 
       if (updatedAccount) {

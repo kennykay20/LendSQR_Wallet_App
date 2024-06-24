@@ -8,3 +8,11 @@ export function isValidPassword(password: string): boolean {
   const re = /^(?=.*[a-z])(?=.*[A-Z])[a-zA-Z\d\w\W]{5,}$/;
   return re.test(password);
 }
+
+export function isPositiveValue(amount: any): number {
+  let validateAmount = Math.sign(amount);
+  if (validateAmount === -1) {
+    return -1;
+  }
+  return 0;
+}

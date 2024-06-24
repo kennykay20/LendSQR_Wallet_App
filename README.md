@@ -207,7 +207,7 @@ curl -X POST http://localhost:3400/api/v1/accounts/fund \
   -H "Authorization: Bearer your_bearer_token_here" \ 
   -d '{
     "account_id": "11298712129",
-    "amount": 100.0,
+    "amount": 100,
     "remark": (optional)
   }'
 ```
@@ -220,7 +220,7 @@ curl -X POST http://localhost:3400/api/v1/accounts/transfer \
  -d '{
     "account_id": "11298712129",
     "recipient_account_id": "98728172911",
-    "amount": 50.0,
+    "amount": 50,
     "remark": (optional)
   }'
 ```
@@ -232,7 +232,7 @@ curl -X POST http://localhost:3400/api/v1/accounts/withdraw \
  -H "Authorization: Bearer your_bearer_token_here" \ 
   -d '{
   "account_id": "11298712129",
-  "amount": 20.0,
+  "amount": 20,
   "remark": (optional)
 }'
 ```

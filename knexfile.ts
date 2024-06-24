@@ -1,6 +1,6 @@
 import type { Knex } from "knex";
 import * as dotenv from "dotenv";
-import { config } from "../config";
+import { config } from "./src/config";
 
 process.env.ENV_PATH
   ? dotenv.config({ path: process.env.ENV_PATH })
@@ -21,10 +21,10 @@ const knexConfig: { [key: string]: Knex.Config } = {
     // connection: process.env.DB_URL,
     searchPath: ['knex', 'public'],
     migrations: {
-      directory: './migrations',
+      directory: './src/database/migrations',
     },
     seeds: {
-      directory: './seeds'
+      directory: './src/database/seeds'
     }
   },
 
@@ -61,10 +61,10 @@ const knexConfig: { [key: string]: Knex.Config } = {
     // connection: process.env.DB_URL,
     searchPath: ['knex', 'public'],
     migrations: {
-      directory: './migrations',
+      directory: './src/database/migrations',
     },
     seeds: {
-      directory: './seeds'
+      directory: './src/database/seeds'
     }
   }
 
