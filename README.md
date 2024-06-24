@@ -166,52 +166,85 @@ This is a wallet application built with TypeScript, Node.js, Knex.js as the ORM,
 ### Register a User
 
 ```sh
-curl -X POST http://localhost:3400/api/v1/user/register -H "Content-Type: application/json" -d '{
-  "full_name": "mary kay",
-  "username": "marykay",
-  "email": "marykay@gmail.com",
-  "password": "Password1",
-  "address": "lagos street"
-}'
+curl -X POST http://localhost:3400/api/v1/user/register \ 
+  -H "Content-Type: application/json" \ 
+  -d '{
+    "full_name": "mary kay",
+    "username": "marykay",
+    "email": "marykay@gmail.com",
+    "password": "Password1",
+    "address": "lagos street"
+  }'
 ```
 
 ### Login as an existing user
 
 ```sh
-curl -X POST http://localhost:3400/api/v1/auth/login -H "Content-Type: application/json" -d '{
-  "email": "marykay@gmail.com",
-  "password": "Password1",
-}'
+curl -X POST http://localhost:3400/api/v1/auth/login \  
+  -H "Content-Type: application/json" \  
+  -d '{
+    "email": "marykay@gmail.com",
+    "password": "Password1",
+  }'
 ```
-### after you login successfully, it will return a token(jwt_accesstoken), you will use this token as a bearer token when you want to necessary trnsactions like fund account, withdraw e.t.c
+### after you login successfully, it will return a token(jwt_accesstoken), you will use this token as a bearer token when you want to do the necessary transactions like create an account, fund account, withdraw e.t.c
 
-### Create an account -- this will generate 11 random account number for the user which stand as a primary id for the accounts table
-
+### Create an account -- this will generate 11 random account number for the user which stand as a primary id for the accounts table and as well as the account number for the user
 
 ```sh
-curl -X POST http://localhost:3400/api/v1/accounts/create -H "Content-Type: application/json" -d '{
-  "user_id": "1"
-}'
+curl -X POST http://localhost:3400/api/v1/accounts/create \ 
+  -H "Content-Type: application/json" \ 
+  -d '{
+    "user_id": "1"
+  }'
 ```
 
 ### Fund an existing account
-curl -X POST http://localhost:3400/api/v1/accounts/fund -H "Content-Type: application/json" -d '{
-  "account_id": "11298712129",
-  "amount": 100.0,
-  "remark": (optional)
-}'
+
+```sh
+curl -X POST http://localhost:3400/api/v1/accounts/fund \ 
+  -H "Content-Type: application/json" \ 
+  -H "Authorization: Bearer your_bearer_token_here" \ 
+  -d '{
+    "account_id": "11298712129",
+    "amount": 100.0,
+    "remark": (optional)
+  }'
+```
 
 ### Transfer funds to another account
-curl -X POST http://localhost:3400/api/v1/accounts/transfer -H "Content-Type: application/json" -d '{
-  "account_id": "11298712129",
-  "recipient_account_id": "98728172911",
-  "amount": 50.0,
-  "remark": (optional)
-}'
+```sh
+curl -X POST http://localhost:3400/api/v1/accounts/transfer \  
+  -H "Content-Type: application/json" \ 
+ -H "Authorization: Bearer your_bearer_token_here" \ 
+ -d '{
+    "account_id": "11298712129",
+    "recipient_account_id": "98728172911",
+    "amount": 50.0,
+    "remark": (optional)
+  }'
+```
 
 ### Withdraw funds
-curl -X POST http://localhost:3400/api/v1/accounts/withdraw -H "Content-Type: application/json" -d '{
+```sh
+curl -X POST http://localhost:3400/api/v1/accounts/withdraw \ 
+ -H "Content-Type: application/json" \ 
+ -H "Authorization: Bearer your_bearer_token_here" \ 
+  -d '{
   "account_id": "11298712129",
   "amount": 20.0,
   "remark": (optional)
 }'
+```
+
+This README file includes the following sections:
+
+- **Project title and description**: An overview of the project.
+- **Features**: A list of the main features.
+- **Requirements**: Software dependencies needed to run the project.
+- **Getting Started**: Instructions to set up the project, including installation, environment setup, and database migration.
+- **Scripts**: Common scripts to run migrations, start the development server, and production.
+- **Project Structure**: A brief overview of the project directory structure.
+- **API Endpoints**: A list of available API endpoints with their descriptions.
+- **Example Usage**: Examples of how to use the API endpoints using `curl`.
+
