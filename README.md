@@ -248,3 +248,8 @@ This README file includes the following sections:
 - **API Endpoints**: A list of available API endpoints with their descriptions.
 - **Example Usage**: Examples of how to use the API endpoints using `curl`.
 
+
+# Notion Documentation
+
+- For detailed documentation, please visit our [Notion page](https://www.notion.so/LendSQR_Wallet-API-Documentation-5e8eeca0874c4544be7cd668446f63fb?pvs=4)
+
