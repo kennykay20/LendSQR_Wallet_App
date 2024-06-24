@@ -29,11 +29,11 @@ export class AuthService {
         return res.status(400).send('Invalid Password');
       }
 
-      if (!isUser.is_deleted && isUser.is_active) {
+      if (!isUser.is_deleted) {
         token = await generateAuthToken(email, isUser.id);
       } else {
         return res.status(400).send(
-          'Please activate your account'
+          'Please activate your account or account is deleted'
         );
       }
       console.log('token ', token);

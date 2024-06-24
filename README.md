@@ -187,7 +187,7 @@ curl -X POST http://localhost:3400/api/v1/auth/login \
     "password": "Password1",
   }'
 ```
-### after you login successfully, it will return a token(jwt_accesstoken), you will use this token as a bearer token when you want to do the necessary transactions like create an account, fund account, withdraw e.t.c
+### after you login successfully, it will return a token(jwt_accesstoken), you will use this token as a bearer token when you want to do the necessary transactions like create an account, fund account, withdraw e.t.c, Token only last for 1hr, it expires after one hour.
 
 ### Create an account -- this will generate 11 random account number for the user which stand as a primary id for the accounts table and as well as the account number for the user
 
@@ -206,7 +206,7 @@ curl -X POST http://localhost:3400/api/v1/accounts/fund \
   -H "Content-Type: application/json" \ 
   -H "Authorization: Bearer your_bearer_token_here" \ 
   -d '{
-    "account_id": "11298712129",
+    "account_id": 10947536006,
     "amount": 100,
     "remark": (optional)
   }'
@@ -218,8 +218,8 @@ curl -X POST http://localhost:3400/api/v1/accounts/transfer \
   -H "Content-Type: application/json" \ 
  -H "Authorization: Bearer your_bearer_token_here" \ 
  -d '{
-    "account_id": "11298712129",
-    "recipient_account_id": "98728172911",
+    "account_id": 10947536006,
+    "recipient_account_id": 98728172911,
     "amount": 50,
     "remark": (optional)
   }'
@@ -231,7 +231,7 @@ curl -X POST http://localhost:3400/api/v1/accounts/withdraw \
  -H "Content-Type: application/json" \ 
  -H "Authorization: Bearer your_bearer_token_here" \ 
   -d '{
-  "account_id": "11298712129",
+  "account_id": 10947536006,
   "amount": 20,
   "remark": (optional)
 }'
